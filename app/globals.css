@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --surface: 9 12 27;
+  --card: 20 25 50;
+  --accent: 106 130 251;
+  --text: 240 244 255;
+  --muted: 159 172 212;
+}
+
+.light {
+  color-scheme: light;
+  --surface: 247 250 255;
+  --card: 255 255 255;
+  --accent: 77 93 238;
+  --text: 14 23 49;
+  --muted: 98 112 146;
+}
+
+* {
+  @apply border-white/10;
+}
+
+body {
+  @apply bg-surface text-text antialiased;
+  font-feature-settings: "liga" 1, "calt" 1;
+  background-image: radial-gradient(circle at 20% 0%, rgba(99,102,241,.12), transparent 40%), radial-gradient(circle at 80% 0%, rgba(56,189,248,.1), transparent 44%);
+}
+
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(151, 168, 220, 0.35) transparent;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(151, 168, 220, 0.35);
+  border-radius: 999px;
+}
