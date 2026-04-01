@@ -30,6 +30,9 @@
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
 
+  --color-surface: hsl(var(--surface));
+  --color-surface-foreground: hsl(var(--surface-foreground));
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -37,65 +40,75 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Microsoft Fluent 2025 — Light Mode */
+    --background: 210 17% 96%;        /* #f3f3f3 Windows 11 shell bg */
+    --foreground: 0 0% 14%;           /* #242424 Fluent dark text */
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 14%;
 
-    --primary: 258 90% 66%;
-    --primary-foreground: 210 40% 98%;
+    /* Microsoft Blue #0078D4 */
+    --primary: 206 100% 42%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 14% 92%;
+    --secondary-foreground: 0 0% 14%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 14% 90%;
+    --muted-foreground: 0 0% 38%;     /* #616161 Fluent subtle text */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 206 100% 95%;
+    --accent-foreground: 206 100% 30%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 258 90% 66%;
+    --border: 210 14% 87%;
+    --input: 210 14% 90%;
+    --ring: 206 100% 42%;
 
-    --radius: 0.75rem;
+    --surface: 0 0% 100%;
+    --surface-foreground: 0 0% 14%;
+
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 210 40% 98%;
+    /* Microsoft Fluent 2025 — Dark Mode (Teams/Windows 11 dark) */
+    --background: 220 14% 12%;        /* #1c1c1c Windows 11 dark shell */
+    --foreground: 0 0% 93%;           /* #ededed */
 
-    --card: 0 0% 6%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 13% 17%;              /* #252525 */
+    --card-foreground: 0 0% 93%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 13% 17%;
+    --popover-foreground: 0 0% 93%;
 
-    --primary: 258 90% 66%;
-    --primary-foreground: 210 40% 98%;
+    /* Microsoft Blue #0078D4 — slightly brightened for dark */
+    --primary: 206 100% 48%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 12% 21%;
+    --secondary-foreground: 0 0% 93%;
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 12% 21%;
+    --muted-foreground: 0 0% 56%;     /* #8e8e8e */
 
-    --accent: 0 0% 10%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 206 100% 18%;
+    --accent-foreground: 206 100% 75%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
-    --ring: 258 90% 66%;
+    --border: 220 12% 22%;
+    --input: 220 12% 21%;
+    --ring: 206 100% 48%;
+
+    --surface: 220 13% 15%;
+    --surface-foreground: 0 0% 93%;
   }
 }
 
@@ -107,12 +120,14 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     @apply antialiased;
+    font-family: var(--font-sans, 'Segoe UI'), system-ui, -apple-system, sans-serif;
   }
 }
 
+/* Fluent acrylic / mica scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -120,10 +135,24 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: hsl(var(--border));
   border-radius: 20px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: hsl(var(--muted-foreground));
+}
+
+/* Fluent acrylic surface */
+.fluent-acrylic {
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+/* Fluent reveal highlight on hover */
+.fluent-reveal {
+  transition: background-color 0.1s ease;
+}
+.fluent-reveal:hover {
+  background-color: hsl(var(--muted));
 }
