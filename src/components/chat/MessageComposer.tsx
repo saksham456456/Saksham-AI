@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Send, StopCircle } from "lucide-react";
+import { Send, Square } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function MessageComposer() {
   const [content, setContent] = useState("");
@@ -36,35 +37,56 @@ export function MessageComposer() {
   };
 
   const disabled = isGenerating || isModelLoading || webGPUSupported === false;
+  const canSend = content.trim() && !disabled;
+
+  const placeholder =
+    webGPUSupported === false
+      ? "Browser not supported"
+      : isModelLoading
+        ? "Loading model..."
+        : "Message BriefX... (Shift+Enter for new line)";
 
   return (
-    <div className="p-4 border-t border-white/5 bg-background/50 backdrop-blur-md sticky bottom-0 z-10 w-full max-w-3xl mx-auto">
-      <div className="relative flex items-end gap-2 bg-white/5 rounded-2xl p-2 border border-white/10 shadow-sm focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-primary/50 transition-all">
+    <div className="pb-4 px-4 max-w-3xl mx-auto w-full">
+      <div
+        className={cn(
+          "relative flex items-end gap-2 bg-card border border-border rounded-xl px-3 py-2 shadow-sm",
+          "focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20",
+          "transition-all duration-150"
+        )}
+      >
         <textarea
           ref={textareaRef}
           value={content}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder={
-            webGPUSupported === false
-              ? "Browser not supported"
-              : isModelLoading
-                ? "Model is loading..."
-                : "Ask BriefX anything... (Shift+Enter for newline)"
-          }
-          className="flex-1 max-h-[200px] min-h-[44px] bg-transparent resize-none outline-none px-3 py-3 text-sm placeholder:text-muted-foreground"
+          placeholder={placeholder}
+          className="flex-1 max-h-[200px] min-h-[40px] bg-transparent resize-none outline-none px-1 py-2 text-sm placeholder:text-muted-foreground leading-relaxed"
           rows={1}
           disabled={disabled}
         />
+
         <Button
           onClick={handleSend}
-          disabled={!content.trim() || disabled}
+          disabled={!canSend}
           size="icon"
-          className="h-10 w-10 rounded-xl shrink-0"
+          className={cn(
+            "h-8 w-8 rounded-lg shrink-0 transition-all",
+            canSend
+              ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+              : "bg-muted text-muted-foreground"
+          )}
         >
-          {isGenerating ? <StopCircle className="h-5 w-5" /> : <Send className="h-5 w-5" />}
+          {isGenerating ? (
+            <Square className="h-3.5 w-3.5 fill-current" />
+          ) : (
+            <Send className="h-3.5 w-3.5" />
+          )}
         </Button>
       </div>
+      <p className="text-center text-[11px] text-muted-foreground mt-2">
+        BriefX runs locally in your browser. Conversations stay private.
+      </p>
     </div>
   );
 }

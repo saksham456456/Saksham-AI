@@ -1,11 +1,11 @@
 "use client";
 
 import { useAppStore } from "@/lib/store";
-import { Badge } from "@/components/ui/badge";
-import { Moon, Sun, AlertCircle, WifiOff } from "lucide-react";
+import { Moon, Sun, AlertCircle, WifiOff, CheckCircle2, Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function TopBar() {
   const { isModelLoading, webGPUSupported, modelLoadError, modelLoadProgress } = useAppStore();
@@ -20,54 +20,79 @@ export function TopBar() {
   const getStatus = () => {
     if (webGPUSupported === false) {
       return (
-        <Badge variant="destructive" className="flex items-center gap-1.5 shadow-sm">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-destructive/10 text-destructive text-xs font-medium">
           <AlertCircle className="h-3.5 w-3.5" />
           WebGPU Unsupported
-        </Badge>
+        </div>
       );
     }
     if (modelLoadError) {
       return (
-        <Badge variant="destructive" className="flex items-center gap-1.5 shadow-sm">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-destructive/10 text-destructive text-xs font-medium">
           <WifiOff className="h-3.5 w-3.5" />
           Load Failed
-        </Badge>
+        </div>
       );
     }
     if (isModelLoading) {
       return (
-        <Badge variant="secondary" className="flex items-center gap-2 bg-primary/10 text-primary border-primary/20 shadow-sm">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-          <span className="hidden sm:inline">{modelLoadProgress?.text || "Loading Model..."}</span>
-          <span className="sm:hidden">Loading...</span>
-        </Badge>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs font-medium">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <span className="hidden sm:inline">{modelLoadProgress?.text || "Loading model..."}</span>
+            <span className="sm:hidden">Loading...</span>
+          </div>
+          {modelLoadProgress && (
+            <div className="hidden sm:flex items-center gap-1.5">
+              <div className="w-24 h-1 bg-border rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary rounded-full transition-all duration-300"
+                  style={{ width: `${(modelLoadProgress.progress || 0) * 100}%` }}
+                />
+              </div>
+              <span className="text-xs text-muted-foreground">
+                {Math.round((modelLoadProgress.progress || 0) * 100)}%
+              </span>
+            </div>
+          )}
+        </div>
       );
     }
     return (
-      <Badge variant="outline" className="flex items-center gap-2 border-green-500/20 bg-green-500/10 text-green-500 shadow-sm">
-        <div className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-medium">
+        <CheckCircle2 className="h-3.5 w-3.5" />
         Model Ready
-      </Badge>
+      </div>
     );
   };
 
   return (
-    <div className="h-[72px] border-b border-white/5 bg-background/50 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-10 shrink-0">
-      <div className="flex items-center gap-4">
+    <div className="h-[56px] border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-10 shrink-0">
+      {/* Status */}
+      <div className="flex items-center gap-3">
         {getStatus()}
       </div>
 
-      {mounted && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="text-muted-foreground hover:bg-white/5 h-9 w-9 rounded-full"
-        >
-          {theme === "light" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      )}
+      {/* Right actions */}
+      <div className="flex items-center gap-1">
+        {mounted && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className={cn(
+              "h-8 w-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent"
+            )}
+          >
+            {theme === "light" ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
