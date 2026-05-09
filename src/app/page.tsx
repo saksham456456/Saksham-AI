@@ -23,23 +23,23 @@ export default function Home() {
 
   if (webGPUSupported === false) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background p-4 flex-col">
-        <div className="max-w-md w-full bg-red-500/10 border border-red-500/20 rounded-2xl p-8 text-center space-y-6 shadow-2xl">
-          <div className="mx-auto w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center shadow-inner">
-            <AlertTriangle className="h-8 w-8 text-red-500" />
+      <div className="flex h-screen items-center justify-center bg-background p-6">
+        <div className="max-w-md w-full bg-card border border-destructive/20 rounded-xl p-8 text-center space-y-5 shadow-lg">
+          <div className="mx-auto h-14 w-14 bg-destructive/10 rounded-full flex items-center justify-center">
+            <AlertTriangle className="h-7 w-7 text-destructive" />
           </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold tracking-tight text-white">Browser Not Supported</h2>
-            <p className="text-muted-foreground">
-              BriefX requires <strong>WebGPU</strong> to run AI models locally. Your current browser or device does not support this feature yet.
+          <div className="space-y-1.5">
+            <h2 className="text-xl font-semibold text-foreground">Browser Not Supported</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              BriefX requires <strong>WebGPU</strong> to run AI models locally. Your current browser or device does not support this feature.
             </p>
           </div>
-          <div className="p-4 bg-black/40 rounded-lg text-left border border-white/5 space-y-3">
-            <p className="text-sm font-medium text-white">Try these browsers:</p>
+          <div className="p-4 bg-muted rounded-lg text-left space-y-2 border border-border">
+            <p className="text-sm font-medium text-foreground">Supported browsers</p>
             <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
-              <li>Google Chrome (version 113+)</li>
-              <li>Microsoft Edge (version 113+)</li>
-              <li>Ensure hardware acceleration is enabled</li>
+              <li>Microsoft Edge 113+</li>
+              <li>Google Chrome 113+</li>
+              <li>Hardware acceleration must be enabled</li>
             </ul>
           </div>
         </div>
@@ -50,18 +50,24 @@ export default function Home() {
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
-      <main className="flex flex-col flex-1 h-full w-full relative">
+      <main className="flex flex-col flex-1 h-full w-full relative overflow-hidden">
         <TopBar />
         {modelLoadError ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-4">
-            <div className="max-w-md text-center space-y-6 bg-red-500/5 p-8 rounded-3xl border border-red-500/10">
-              <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
-              <div>
-                <h3 className="text-xl font-bold mb-2">Model Failed to Load</h3>
-                <p className="text-muted-foreground text-sm">{modelLoadError}</p>
+          <div className="flex-1 flex flex-col items-center justify-center p-6">
+            <div className="max-w-sm text-center space-y-5 bg-card p-8 rounded-xl border border-destructive/20 shadow-lg">
+              <div className="mx-auto h-14 w-14 bg-destructive/10 rounded-full flex items-center justify-center">
+                <AlertTriangle className="h-7 w-7 text-destructive" />
               </div>
-              <Button onClick={() => loadModel()} className="bg-red-500 hover:bg-red-600 text-white">
-                <DownloadCloud className="mr-2 h-4 w-4" /> Try Again
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-semibold text-foreground">Model Failed to Load</h3>
+                <p className="text-sm text-muted-foreground">{modelLoadError}</p>
+              </div>
+              <Button
+                onClick={() => loadModel()}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
+              >
+                <DownloadCloud className="h-4 w-4" />
+                Try Again
               </Button>
             </div>
           </div>
